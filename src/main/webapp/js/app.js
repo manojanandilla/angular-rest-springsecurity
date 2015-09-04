@@ -7,6 +7,11 @@ angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.services'])
 				controller: CreateController
 			});
 			
+			$routeProvider.when('/contactUs', {
+				templateUrl: 'partials/contactUs.html',
+				controller: ContactUsController
+			});
+			
 			$routeProvider.when('/edit/:id', {
 				templateUrl: 'partials/edit.html',
 				controller: EditController
@@ -16,6 +21,7 @@ angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.services'])
 				templateUrl: 'partials/login.html',
 				controller: LoginController
 			});
+
 			
 			$routeProvider.otherwise({
 				templateUrl: 'partials/index.html',
@@ -148,6 +154,25 @@ function CreateController($scope, $location, NewsService) {
 
 
 function LoginController($scope, $rootScope, $location, $cookieStore, UserService) {
+	
+	$scope.rememberMe = false;
+	
+	$scope.login = function() {
+		UserService.authenticate($.param({username: $scope.username, password: $scope.password}), function(authenticationResult) {
+			var authToken = authenticationResult.token;
+			$rootScope.authToken = authToken;
+			if ($scope.rememberMe) {
+				$cookieStore.put('authToken', authToken);
+			}
+			UserService.get(function(user) {
+				$rootScope.user = user;
+				$location.path("/");
+			});
+		});
+	};
+};
+
+function ContactUsController($scope, $rootScope, $location, $cookieStore, UserService) {
 	
 	$scope.rememberMe = false;
 	
