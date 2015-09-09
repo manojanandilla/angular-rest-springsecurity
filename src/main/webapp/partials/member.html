@@ -1,0 +1,18 @@
+<div class="pull-right">
+	<a href="#!/addMember"  ng-show="hasRole('admin')" title="Create">Add Member <span class="glyphicon glyphicon-plus"></span></a>
+</div>
+<div class="page-header">
+	<h3>Members</h3>
+</div>
+
+<div ng-repeat="member in members">
+	<hr />
+	<div class="pull-right">
+		<a href="" ng-click="deleteEntry(member)" class="btn btn-xs btn-default" ng-show="hasRole('admin')" title="delete"><span class="glyphicon glyphicon-trash"></span></a>
+		<a href="#!/editMember/{{member.id}}" class="btn btn-xs btn-default" ng-show="hasRole('admin')" title="edit"><span class="glyphicon glyphicon-pencil"></span></a>
+	</div>
+	<h4>{{member.date | date}}</h4>
+	<p>{{member.name}}</p>
+	<p>{{member.age}}</p>
+</div>
+<hr />

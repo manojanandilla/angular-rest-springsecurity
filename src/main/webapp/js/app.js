@@ -7,6 +7,11 @@ angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.services'])
 				controller: CreateController
 			});
 			
+			$routeProvider.when('/addMember', {
+				templateUrl: 'partials/addMember.html',
+				controller: AddMemberController
+			});
+			
 			$routeProvider.when('/contactUs', {
 				templateUrl: 'partials/contactUs.html',
 				controller: ContactUsController
@@ -21,7 +26,11 @@ angular.module('exampleApp', ['ngRoute', 'ngCookies', 'exampleApp.services'])
 				templateUrl: 'partials/login.html',
 				controller: LoginController
 			});
-
+			
+			$routeProvider.when('/member', {
+				templateUrl: 'partials/member.html',
+				controller: MemberController
+			});
 			
 			$routeProvider.otherwise({
 				templateUrl: 'partials/index.html',
@@ -128,6 +137,17 @@ function IndexController($scope, NewsService) {
 	};
 };
 
+function MemberController($scope, MemberService) {
+	
+	$scope.members = MemberService.query();
+	
+	$scope.deleteEntry = function(member) {
+		member.$remove(function() {
+			$scope.members = MemberService.query();
+		});
+	};
+};
+
 
 function EditController($scope, $routeParams, $location, NewsService) {
 
@@ -147,6 +167,17 @@ function CreateController($scope, $location, NewsService) {
 	
 	$scope.save = function() {
 		$scope.newsEntry.$save(function() {
+			$location.path('/');
+		});
+	};
+};
+
+function AddMemberController($scope, $location, MemberService) {
+	
+	$scope.member = new MemberService();
+	
+	$scope.save = function() {
+		$scope.member.$save(function() {
 			$location.path('/');
 		});
 	};
@@ -210,4 +241,9 @@ services.factory('UserService', function($resource) {
 services.factory('NewsService', function($resource) {
 	
 	return $resource('rest/news/:id', {id: '@id'});
+});
+
+services.factory('MemberService', function($resource) {
+	
+	return $resource('rest/member/:id', {id: '@id'});
 });
